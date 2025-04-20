@@ -28,9 +28,7 @@ export default function AppLayout() {
             </div>
     
             <main className="contenedor sombra">
-                <Outlet/> /**https://www.youtube.com/watch?v=bEUOZMu4JRI&t=459s
-                https://www.material-react-table.com/docs/examples/editing-crud
-                https://www.youtube.com/watch?v=fJRyC-xLIQc*/
+                <Outlet/> 
             </main>
 
             <footer className="bg-black mt-5 py-5">

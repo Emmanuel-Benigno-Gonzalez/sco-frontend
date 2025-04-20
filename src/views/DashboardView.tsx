@@ -144,93 +144,65 @@ export default function DashboardView() {
         </div>
 
         <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-            htmlFor="text"
-          >Hora Itinerario</label>
+          <label className="font-normal text-2xl" htmlFor="Hora_ITI">Hora Itinerario</label>
           <input
             id="Hora_ITI"
-            type="text"
-            placeholder="HH:MM"
-            className="w-full p-3  border-gray-300 border"
+            type="time"
+            step="1"
+            className="w-full p-3 border-gray-300 border"
             {...register("Hora_ITI", {
-              required: "La hora de itinerario es obligatoria",
-              pattern: {
-                value: /^([01]\d|2[0-3]):([0-5]\d)$/,
-                message: "Formato de hora inválido (HH:MM)"
-              }
+              required: "La hora de itinerario es obligatoria"
             })}
           />
-          {errors.Hora_ITI && (
-            <ErrorMessage>{errors.Hora_ITI.message}</ErrorMessage>
-          )}
+          {errors.Hora_ITI && <ErrorMessage>{errors.Hora_ITI.message}</ErrorMessage>}
         </div>
 
         <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-            htmlFor="text"
-          >Hora Real</label>
+          <label className="font-normal text-2xl" htmlFor="Hora_Real">Hora Real</label>
           <input
             id="Hora_Real"
-            type="text"
-            placeholder="HH:MM"
-            className="w-full p-3  border-gray-300 border"
+            type="time"
+            step="1"
+            className="w-full p-3 border-gray-300 border"
             {...register("Hora_Real", {
-              required: "La hora Real es obligatoria",
-              pattern: {
-                value: /^([01]\d|2[0-3]):([0-5]\d)$/,
-                message: "Formato de hora inválido (HH:MM)"
-              }
+              required: "La hora Real es obligatoria"
             })}
           />
-          {errors.Hora_Real && (
-            <ErrorMessage>{errors.Hora_Real.message}</ErrorMessage>
-          )}
+          {errors.Hora_Real && <ErrorMessage>{errors.Hora_Real.message}</ErrorMessage>}
         </div>
 
         <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-            htmlFor="text"
-          >Hora Calzos</label>
+          <label className="font-normal text-2xl" htmlFor="Hora_Calzos">Hora Calzos</label>
           <input
             id="Hora_Calzos"
-            type="text"
-            placeholder="HH:MM"
-            className="w-full p-3  border-gray-300 border"
+            type="time"
+            step="1"
+            className="w-full p-3 border-gray-300 border"
             {...register("Hora_Calzos", {
               validate: (value) => {
-                if (!value) return true; // Si está vacío, es válido (porque es opcional)
-                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value) || "Formato de hora inválido (HH:MM)";
+                if (!value) return true;
+                return true; // `type="time"` ya limita el formato
               }
             })}
           />
-          {errors.Hora_Calzos && (
-            <ErrorMessage>{errors.Hora_Calzos.message}</ErrorMessage>
-          )}
+          {errors.Hora_Calzos && <ErrorMessage>{errors.Hora_Calzos.message}</ErrorMessage>}
         </div>
 
         <div className="flex flex-col gap-5">
-          <label
-            className="font-normal text-2xl"
-            htmlFor="text"
-          >Fin OPS</label>
+          <label className="font-normal text-2xl" htmlFor="Fin_OPS">Fin OPS</label>
           <input
             id="Fin_OPS"
-            type="text"
-            placeholder="HH:MM"
-            className="w-full p-3  border-gray-300 border"
+            type="time"
+            step="1"
+            className="w-full p-3 border-gray-300 border"
             {...register("Fin_OPS", {
               validate: (value) => {
-                if (!value) return true; // Si está vacío, es válido (porque es opcional)
-                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value) || "Formato de hora inválido (HH:MM)";
+                if (!value) return true;
+                return true;
               }
             })}
           />
-          {errors.Fin_OPS && (
-            <ErrorMessage>{errors.Fin_OPS.message}</ErrorMessage>
-          )}
+          {errors.Fin_OPS && <ErrorMessage>{errors.Fin_OPS.message}</ErrorMessage>}
         </div>
 
         <div className="flex flex-col gap-5">

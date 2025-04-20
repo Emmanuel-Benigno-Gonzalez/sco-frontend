@@ -23,14 +23,18 @@ const opsSchema = z.object({
         return arg;
     }, z.date()),
     ID_IATA_Aeropuerto: z.string(),
-    Hora_ITI: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    Hora_Real: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
+    //Hora_ITI: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
+    //Hora_Real: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
+    //Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
+    //Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
+    Hora_ITI: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
+    Hora_Real: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
+    Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
+    Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
     ID_Aerolinea: z.string(),
     Vuelo: z.string(),
     Pista: z.string(),
-    Posicion: z.string(),
+    Posicion: z.string().nullable(),
     Puerta: z.number().nullable(),
     Banda: z.number().nullable(),
     Adulto_Nac: z.number().nullable(),
@@ -46,9 +50,46 @@ const opsSchema = z.object({
     Pza_Equipaje: z.number().nullable(),
     Kgs_Equipaje: z.number().nullable(),
     Kgs_Carga: z.number().nullable(),
-    Correo: z.string(),
-    Observaciones: z.string()
+    Correo: z.string().nullable(),
+    Observaciones: z.string().nullable()
 });
+
+export const consultarOpsSchema = z.array(
+    opsSchema.pick({
+        ID_Usuario: true,
+        ID_Matricula: true,
+        TipoMov: true,
+        Fecha_Ope: true,
+        ID_IATA_Aeropuerto: true,
+        Hora_ITI: true,
+        Hora_Real: true,
+        Hora_Calzos: true,
+        Fin_OPS: true,
+        ID_Aerolinea: true,
+        Vuelo: true,
+        Pista: true,
+        Posicion: true,
+        Puerta: true,
+        Banda: true,
+        Adulto_Nac: true,
+        Infante_Nac: true,
+        Transito_Nac: true,
+        Conexion_Nac: true,
+        Excento_Nac: true,
+        Adulto_Int: true,
+        Infante_Int: true,
+        Transito_Int: true,
+        Conexion_Int: true,
+        Excento_Int: true,
+        Pza_Equipaje: true,
+        Kgs_Equipaje: true,
+        Kgs_Carga: true,
+        Correo: true,
+        Observaciones: true
+    }).extend({
+        ID_Registro: z.string()
+    })
+)
 
 type Auth = z.infer< typeof authSchema >
 export type UserLoginForm = Pick<Auth, 'ID_Usuario' | 'Password'>
