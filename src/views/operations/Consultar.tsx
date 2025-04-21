@@ -29,7 +29,7 @@ export default function Consultar() {
     localStorage.getItem("fechaFin") || defaultFin
   );
 
-  // 🔄 Guardar automáticamente el rango en localStorage cuando cambien
+  // Guardar en localStorage cuando cambian las fechas
   useEffect(() => {
     if (fechaInicio && fechaFin) {
       localStorage.setItem("fechaInicio", fechaInicio);
@@ -37,14 +37,43 @@ export default function Consultar() {
     }
   }, [fechaInicio, fechaFin]);
 
-  // 🔍 Consulta react-query que se actualiza automáticamente con cambios en las fechas
+  // Timer de inactividad: borra localStorage y reinicia fechas tras 20 min
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        localStorage.removeItem("fechaInicio");
+        localStorage.removeItem("fechaFin");
+        console.log("Fechas eliminadas por inactividad");
+
+        const { defaultInicio, defaultFin } = getDefaultFechas();
+        setFechaInicio(defaultInicio);
+        setFechaFin(defaultFin);
+      }, 20 * 60 * 1000); // 20 minutos
+    };
+
+    const events = ["mousemove", "keydown", "click", "scroll"];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+
+    resetTimer(); // iniciar al montar
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach((event) =>
+        window.removeEventListener(event, resetTimer)
+      );
+    };
+  }, []);
+
   const { data, refetch } = useQuery({
     queryKey: ['ops', fechaInicio, fechaFin],
     queryFn: () => getOPS(fechaInicio, fechaFin),
   });
 
   const handleBuscar = () => {
-    refetch(); // Opcional si quieres dar control manual
+    refetch(); // Refrescar manualmente
   };
 
   return (
