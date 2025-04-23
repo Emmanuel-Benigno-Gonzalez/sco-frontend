@@ -2,6 +2,9 @@ import TableOps from '../../components/TableOps';
 import { useQuery } from "@tanstack/react-query";
 import { getOPS } from "../../api/OpsAPI";
 import { useEffect, useState } from "react";
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function getDefaultFechas() {
   const now = new Date();
@@ -29,7 +32,6 @@ export default function Consultar() {
     localStorage.getItem("fechaFin") || defaultFin
   );
 
-  // Guardar en localStorage cuando cambian las fechas
   useEffect(() => {
     if (fechaInicio && fechaFin) {
       localStorage.setItem("fechaInicio", fechaInicio);
@@ -37,7 +39,6 @@ export default function Consultar() {
     }
   }, [fechaInicio, fechaFin]);
 
-  // Timer de inactividad: borra localStorage y reinicia fechas tras 20 min
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -57,7 +58,7 @@ export default function Consultar() {
     const events = ["mousemove", "keydown", "click", "scroll"];
     events.forEach((event) => window.addEventListener(event, resetTimer));
 
-    resetTimer(); // iniciar al montar
+    resetTimer();
 
     return () => {
       clearTimeout(timeoutId);
@@ -73,34 +74,67 @@ export default function Consultar() {
   });
 
   const handleBuscar = () => {
-    refetch(); // Refrescar manualmente
+    refetch();
   };
 
   return (
     <>
       <h1>Consultar de Operaciones</h1>
 
-      <div>
-        <label>
-          Fecha Inicio:
-          <input
-            type="date"
-            value={fechaInicio}
-            onChange={(e) => setFechaInicio(e.target.value)}
-          />
-        </label>
+      <Box display="flex" gap={2} alignItems="center" marginBottom={2}>
+        <TextField
+          id="fecha-inicio"
+          label="Inicio"
+          type="date"
+          value={fechaInicio}
+          onChange={(e) => setFechaInicio(e.target.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          sx={{
+            '& .MuiInputBase-input': {
+              fontSize: '2rem',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '2rem',
+            },
+          }}
+        />
 
-        <label>
-          Fecha Fin:
-          <input
-            type="date"
-            value={fechaFin}
-            onChange={(e) => setFechaFin(e.target.value)}
-          />
-        </label>
+        <TextField
+          id="fecha-fin"
+          label="Fin"
+          type="date"
+          value={fechaFin}
+          onChange={(e) => setFechaFin(e.target.value)}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          sx={{
+            '& .MuiInputBase-input': {
+              fontSize: '2rem',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '2rem',
+            },
+          }}
+        />
 
-        <button onClick={handleBuscar}>Buscar</button>
-      </div>
+        <Button
+          variant="contained"
+          onClick={handleBuscar}
+          sx={{
+            backgroundColor: '#0CB7F2', 
+            fontSize: '1.5rem',
+            padding: '8px 16px',
+            '&:hover': {
+              backgroundColor: '#00B4D8',
+            },
+          }}
+        >
+          Buscar
+        </Button>
+      </Box>
 
       <TableOps data={data || []} />
     </>

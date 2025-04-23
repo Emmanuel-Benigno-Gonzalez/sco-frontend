@@ -7,13 +7,13 @@ type OpsData = typeof consultarOpsSchema._type;
 
 const theme = createTheme({
   typography: {
-    fontSize: 14,
+    fontSize: 16,
   },
   components: {
     MuiTableCell: {
       styleOverrides: {
         root: {
-          fontSize: '14px',
+          fontSize: '16px',
         },
         head: {
           fontSize: '15px',
@@ -23,7 +23,30 @@ const theme = createTheme({
     MuiSvgIcon: {
       styleOverrides: {
         root: {
-          fontSize: '20px',
+          fontSize: '25px',
+        },
+      },
+    },
+    MuiTablePagination: {
+      styleOverrides: {
+        toolbar: {
+          fontSize: '16px',
+        },
+        selectLabel: {
+          fontSize: '16px',
+        },
+        displayedRows: {
+          fontSize: '16px',
+        },
+        select: {
+          fontSize: '16px',
+        },
+      },
+    },
+    MuiTableFooter: {
+      styleOverrides: {
+        root: {
+          fontSize: '16px',
         },
       },
     },

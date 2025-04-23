@@ -41,7 +41,7 @@ export default function DashboardView() {
     Observaciones: ''
   }
 
-  const {register, handleSubmit, reset, formState: {errors}} = useForm<OPSRegistrationForm>({defaultValues: initialValues})
+  const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm>({defaultValues: initialValues})
 
   const { mutate } = useMutation({
     mutationFn: createOPS,
@@ -50,11 +50,11 @@ export default function DashboardView() {
     },
     onSuccess: (data) => {
       toast.success(data)
+      reset()
     }
   })
 
-  
-  const handleRegisterOPS = (formData: OPSRegistrationForm) => mutate(formData)        
+  const handleRegisterOPS = (formData: OPSRegistrationForm) => mutate(formData)     
 
   return (
     <>
@@ -76,6 +76,10 @@ export default function DashboardView() {
             placeholder="Matricula"
             className="w-full p-3  border-gray-300 border"
             {...register("ID_Matricula", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("ID_Matricula", upper);
+              },
               required: "La Matricula de registro es obligatorio",
             })}
           />
@@ -133,10 +137,14 @@ export default function DashboardView() {
             placeholder="Aeropuerto de Destino/Origen (IATA)"
             className="w-full p-3  border-gray-300 border"
             {...register("ID_IATA_Aeropuerto", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("ID_IATA_Aeropuerto", upper);
+              },
               required: "El Destino/Origen de registro es obligatorio",
               validate: (value) =>
                 value.length === 3 || "El código IATA debe tener exactamente 3 caracteres"
-            })}
+            },)}
           />
           {errors.ID_IATA_Aeropuerto && (
             <ErrorMessage>{errors.ID_IATA_Aeropuerto.message}</ErrorMessage>
@@ -216,6 +224,10 @@ export default function DashboardView() {
             placeholder="FBO/Aerolinea que Opero"
             className="w-full p-3  border-gray-300 border"
             {...register("ID_Aerolinea", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("ID_Aerolinea", upper);
+              },
               required: "El FBO/Aerolinea de registro es obligatorio",
               validate: (value) =>
                 value.length === 3 || "El código IATA debe tener exactamente 3 caracteres"
@@ -237,6 +249,10 @@ export default function DashboardView() {
             placeholder="Numero de Vuelo"
             className="w-full p-3  border-gray-300 border"
             {...register("Vuelo", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("Vuelo", upper);
+              },
               required: "El número de vuelo de registro es obligatorio",
             })}
           />
@@ -256,6 +272,10 @@ export default function DashboardView() {
             placeholder="Pista"
             className="w-full p-3  border-gray-300 border"
             {...register("Pista", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("Pista", upper);
+              },
               required: "La Pista de registro es obligatoria",
             })}
           />
@@ -275,6 +295,10 @@ export default function DashboardView() {
             placeholder="Posicion"
             className="w-full p-3  border-gray-300 border"
             {...register("Posicion", {
+              onChange: (e) => {
+                const upper = e.target.value.toUpperCase();
+                setValue("Posicion", upper);
+              },
               validate: (value) => {
                 if (!value) return true; // Permite que el campo esté vacío
                 return /^[A-Za-z0-9]{1,10}$/.test(value) || "Solo letras y números (máx. 10 caracteres)";

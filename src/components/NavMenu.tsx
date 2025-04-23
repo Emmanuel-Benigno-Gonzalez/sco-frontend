@@ -14,7 +14,7 @@ export default function NavMenu() {
 
   return (
     <Popover className="relative">
-      <Popover.Button className="inline-flex items-center p-4 rounded-lg bg-indigo-700 hover:bg-indigo-600">
+      <Popover.Button className="inline-flex items-center p-4 rounded-lg bg-slate-500 hover:bg-slate-400">
         <Bars3Icon className="w-10 h-10 text-white" />
       </Popover.Button>
 

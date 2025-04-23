@@ -11,6 +11,10 @@ const authSchema = z.object({
     Tipo_Usuario: z.number().nullable()
 })
 
+//const toUpperString = () =>
+//    z.preprocess((arg) => typeof arg === 'string' ? arg.toUpperCase() : arg, z.string());
+  
+
 /** Registro de Operaciones **/
 const opsSchema = z.object({
     ID_Usuario: z.number(),
@@ -18,15 +22,11 @@ const opsSchema = z.object({
     TipoMov: z.string(),
     Fecha_Ope: z.preprocess((arg) => {
         if (typeof arg === "string") {
-            return new Date(arg); // Convierte la cadena a Date
+            return new Date(arg);
         }
         return arg;
     }, z.date()),
     ID_IATA_Aeropuerto: z.string(),
-    //Hora_ITI: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    //Hora_Real: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    //Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
-    //Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Formato de hora inválido"),
     Hora_ITI: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
     Hora_Real: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
     Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
