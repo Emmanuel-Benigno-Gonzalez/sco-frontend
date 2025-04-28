@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form'
-import { OPSRegistrationForm } from "@/types/index";
+import { OPSRegistrationForm, opsSchema, mappedMovimiento, mappedCalificador } from "../types/index";
 import ErrorMessage from "./../components/ErrorMessage";
 import { createOPS } from "./../api/OpsAPI";
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export default function DashboardView() {
 
@@ -12,36 +13,44 @@ export default function DashboardView() {
     ID_Usuario: 2,
     ID_Matricula: '',
     TipoMov: '',
-    Fecha_Ope: new Date(),
+    Fecha_Ope: '',
     ID_IATA_Aeropuerto: '',
     Hora_ITI: '',
     Hora_Real: '',
-    Hora_Calzos: '',
-    Fin_OPS: '',
     ID_Aerolinea: '',
     Vuelo: '',
     Pista: '',
+    ID_Calificador: '',
     Posicion: '',
-    Puerta: null,
-    Banda: null,
-    Adulto_Nac: null,
-    Infante_Nac: null,
-    Transito_Nac: null,
-    Conexion_Nac: null,
-    Excento_Nac: null,
-    Adulto_Int: null,
-    Infante_Int: null,
-    Transito_Int: null,
-    Conexion_Int: null,
-    Excento_Int: null,
-    Pza_Equipaje: null,
-    Kgs_Equipaje: null,
-    Kgs_Carga: null,
+    Puerta: '',
+    Banda: '',
+    Adulto_Nac: '',
+    Infante_Nac: '',
+    Transito_Nac: '',
+    Conexion_Nac: '',
+    Excento_Nac: '',
+    Adulto_Int: '',
+    Infante_Int: '',
+    Transito_Int: '',
+    Conexion_Int: '',
+    Excento_Int: '',
+    Pza_Equipaje: '',
+    Kgs_Equipaje: '',
+    Kgs_Carga: '',
     Correo: '',
     Observaciones: ''
   }
 
-  const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm>({defaultValues: initialValues})
+  //const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm>({
+  //  defaultValues: initialValues
+  //})
+
+  const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm> ({
+    defaultValues: initialValues,
+    resolver: zodResolver(opsSchema),
+    mode: 'onChange',   
+    reValidateMode: 'onChange',
+  })
 
   const { mutate } = useMutation({
     mutationFn: createOPS,
@@ -54,9 +63,18 @@ export default function DashboardView() {
     }
   })
 
-  const handleRegisterOPS = (formData: OPSRegistrationForm) => mutate(formData)     
+  const handleRegisterOPS = (formData: OPSRegistrationForm) => mutate(formData)  
+  
+  const movOptions = Object.entries(mappedMovimiento).map(([key, value]) => (
+    <option value={key} key={key}>{value}</option>
+  ))
+
+  const calfOptions = Object.entries(mappedCalificador).map(([key, value]) => (
+    <option value={key} key={key}>{value}</option>
+  ))
 
   return (
+    
     <>
       <h1> Captura de Operaciones</h1>
 
@@ -80,7 +98,6 @@ export default function DashboardView() {
                 const upper = e.target.value.toUpperCase();
                 setValue("ID_Matricula", upper);
               },
-              required: "La Matricula de registro es obligatorio",
             })}
           />
           {errors.ID_Matricula && (
@@ -98,9 +115,8 @@ export default function DashboardView() {
                 required: "El tipo de movimiento es obligatorio",
                 })}
             >
-                <option value="">Seleccione el tipo de Movimiento</option>
-                <option value={'L'}>Llegada</option>
-                <option value={'S'}>Salida</option>
+                <option value="">Seleccione el Tipo de Movimiento</option>
+                {movOptions}
             </select>
             {errors.TipoMov && (
                 <ErrorMessage>{errors.TipoMov.message}</ErrorMessage>
@@ -141,9 +157,6 @@ export default function DashboardView() {
                 const upper = e.target.value.toUpperCase();
                 setValue("ID_IATA_Aeropuerto", upper);
               },
-              required: "El Destino/Origen de registro es obligatorio",
-              validate: (value) =>
-                value.length === 3 || "El código IATA debe tener exactamente 3 caracteres"
             },)}
           />
           {errors.ID_IATA_Aeropuerto && (
@@ -178,7 +191,7 @@ export default function DashboardView() {
           />
           {errors.Hora_Real && <ErrorMessage>{errors.Hora_Real.message}</ErrorMessage>}
         </div>
-
+        {/*
         <div className="flex flex-col gap-5">
           <label className="font-normal text-2xl" htmlFor="Hora_Calzos">Hora Calzos</label>
           <input
@@ -212,7 +225,7 @@ export default function DashboardView() {
           />
           {errors.Fin_OPS && <ErrorMessage>{errors.Fin_OPS.message}</ErrorMessage>}
         </div>
-
+        */}
         <div className="flex flex-col gap-5">
           <label
             className="font-normal text-2xl"
@@ -285,6 +298,23 @@ export default function DashboardView() {
         </div>
 
         <div className="flex flex-col gap-5">
+            <label className="font-normal text-2xl">
+                Calificador
+            </label>
+            <select
+                className="w-full p-3 border-gray-300 border"
+                {...register("ID_Calificador", {
+                })}
+            >
+                <option value="">Seleccione el tipo de Calificador</option>
+                {calfOptions}
+            </select>
+            {errors.ID_Calificador && (
+                <ErrorMessage>{errors.ID_Calificador.message}</ErrorMessage>
+            )}
+        </div>
+
+        <div className="flex flex-col gap-5">
           <label
             className="font-normal text-2xl"
             htmlFor="text"
@@ -317,12 +347,10 @@ export default function DashboardView() {
           >Puerta</label>
           <input
             id="Puerta"
-            type="number"
+            type="text"
             placeholder="Puerta"
             className="w-full p-3  border-gray-300 border"
-            {...register("Puerta", {
-              valueAsNumber: true 
-            })}
+            {...register("Puerta",)}
           />
           {errors.Puerta && (
             <ErrorMessage>{errors.Puerta.message}</ErrorMessage>
@@ -334,12 +362,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Banda">Banda</label>
           <input
             id="Banda"
-            type="number"
+            type="text"
             placeholder="Banda"
             className="w-full p-3 border-gray-300 border"
-            {...register("Banda", {
-              valueAsNumber: true
-            })}
+            {...register("Banda",)}
           />
           {errors.Banda && <ErrorMessage>{errors.Banda.message}</ErrorMessage>}
         </div>
@@ -349,14 +375,14 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Adulto_Nac">Adulto Nac</label>
           <input
             id="Adulto_Nac"
-            type="number"
+            type="text"
             placeholder="Adultos Nacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Adulto_Nac", {
-              valueAsNumber: true
-            })}
+            {...register("Adulto_Nac")}
           />
-          {errors.Adulto_Nac && <ErrorMessage>{errors.Adulto_Nac.message}</ErrorMessage>}
+          {errors.Adulto_Nac && (
+            <ErrorMessage>{errors.Adulto_Nac.message}</ErrorMessage>
+          )}
         </div>
 
         {/* Infante Nac */}
@@ -364,12 +390,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Infante_Nac">Infante Nac</label>
           <input
             id="Infante_Nac"
-            type="number"
+            type="text"
             placeholder="Infantes Nacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Infante_Nac", {
-              valueAsNumber: true
-            })}
+            {...register("Infante_Nac",)}
           />
           {errors.Infante_Nac && <ErrorMessage>{errors.Infante_Nac.message}</ErrorMessage>}
         </div>
@@ -379,12 +403,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Transito_Nac">Tránsito Nac</label>
           <input
             id="Transito_Nac"
-            type="number"
+            type="text"
             placeholder="Tránsito Nacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Transito_Nac", {
-              valueAsNumber: true
-            })}
+            {...register("Transito_Nac")}
           />
           {errors.Transito_Nac && <ErrorMessage>{errors.Transito_Nac.message}</ErrorMessage>}
         </div>
@@ -394,12 +416,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Conexion_Nac">Conexión Nac</label>
           <input
             id="Conexion_Nac"
-            type="number"
+            type="text"
             placeholder="Conexión Nacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Conexion_Nac", {
-              valueAsNumber: true
-            })}
+            {...register("Conexion_Nac")}
           />
           {errors.Conexion_Nac && <ErrorMessage>{errors.Conexion_Nac.message}</ErrorMessage>}
         </div>
@@ -409,12 +429,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Excento_Nac">Excento Nac</label>
           <input
             id="Excento_Nac"
-            type="number"
+            type="text"
             placeholder="Excentos Nacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Excento_Nac", {
-              valueAsNumber: true
-            })}
+            {...register("Excento_Nac")}
           />
           {errors.Excento_Nac && <ErrorMessage>{errors.Excento_Nac.message}</ErrorMessage>}
         </div>
@@ -424,12 +442,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Adulto_Int">Adulto Int</label>
           <input
             id="Adulto_Int"
-            type="number"
+            type="text"
             placeholder="Adultos Internacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Adulto_Int", {
-              valueAsNumber: true
-            })}
+            {...register("Adulto_Int")}
           />
           {errors.Adulto_Int && <ErrorMessage>{errors.Adulto_Int.message}</ErrorMessage>}
         </div>
@@ -439,12 +455,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Infante_Int">Infante Int</label>
           <input
             id="Infante_Int"
-            type="number"
+            type="text"
             placeholder="Infantes Internacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Infante_Int", {
-              valueAsNumber: true
-            })}
+            {...register("Infante_Int")}
           />
           {errors.Infante_Int && <ErrorMessage>{errors.Infante_Int.message}</ErrorMessage>}
         </div>
@@ -454,12 +468,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Transito_Int">Tránsito Int</label>
           <input
             id="Transito_Int"
-            type="number"
+            type="text"
             placeholder="Tránsito Internacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Transito_Int", {
-              valueAsNumber: true
-            })}
+            {...register("Transito_Int")}
           />
           {errors.Transito_Int && <ErrorMessage>{errors.Transito_Int.message}</ErrorMessage>}
         </div>
@@ -469,12 +481,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Conexion_Int">Conexión Int</label>
           <input
             id="Conexion_Int"
-            type="number"
+            type="text"
             placeholder="Conexión Internacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Conexion_Int", {
-              valueAsNumber: true
-            })}
+            {...register("Conexion_Int")}
           />
           {errors.Conexion_Int && <ErrorMessage>{errors.Conexion_Int.message}</ErrorMessage>}
         </div>
@@ -484,12 +494,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Excento_Int">Excento Int</label>
           <input
             id="Excento_Int"
-            type="number"
+            type="text"
             placeholder="Excentos Internacionales"
             className="w-full p-3 border-gray-300 border"
-            {...register("Excento_Int", {
-              valueAsNumber: true
-            })}
+            {...register("Excento_Int")}
           />
           {errors.Excento_Int && <ErrorMessage>{errors.Excento_Int.message}</ErrorMessage>}
         </div>
@@ -499,12 +507,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Pza_Equipaje">Pza Equipaje</label>
           <input
             id="Pza_Equipaje"
-            type="number"
+            type="text"
             placeholder="Piezas de Equipaje"
             className="w-full p-3 border-gray-300 border"
-            {...register("Pza_Equipaje", {
-              valueAsNumber: true
-            })}
+            {...register("Pza_Equipaje")}
           />
           {errors.Pza_Equipaje && <ErrorMessage>{errors.Pza_Equipaje.message}</ErrorMessage>}
         </div>
@@ -514,12 +520,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Kgs_Equipaje">Kgs Equipaje</label>
           <input
             id="Kgs_Equipaje"
-            type="number"
+            type="text"
             placeholder="Kilogramos de Equipaje"
             className="w-full p-3 border-gray-300 border"
-            {...register("Kgs_Equipaje", {
-              valueAsNumber: true
-            })}
+            {...register("Kgs_Equipaje")}
           />
           {errors.Kgs_Equipaje && <ErrorMessage>{errors.Kgs_Equipaje.message}</ErrorMessage>}
         </div>
@@ -529,12 +533,10 @@ export default function DashboardView() {
           <label className="font-normal text-2xl" htmlFor="Kgs_Carga">Kgs Carga</label>
           <input
             id="Kgs_Carga"
-            type="number"
+            type="text"
             placeholder="Kilogramos de Carga"
             className="w-full p-3 border-gray-300 border"
-            {...register("Kgs_Carga", {
-              valueAsNumber: true
-            })}
+            {...register("Kgs_Carga")}
           />
           {errors.Kgs_Carga && <ErrorMessage>{errors.Kgs_Carga.message}</ErrorMessage>}
         </div>
@@ -582,7 +584,6 @@ export default function DashboardView() {
         />
 
       </form>
-
     </>
   );
 }

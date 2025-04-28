@@ -81,10 +81,6 @@ function TableOps({ data }: { data: OpsData }) {
         accessorKey: "Fecha_Ope",
         header: "FECHA",
         enableHiding: false,
-        Cell: ({ cell }) => {
-          const date = cell.getValue<Date>();
-          return date.toLocaleDateString(); // Esto corrige el error
-        }
       }
       
     ],
