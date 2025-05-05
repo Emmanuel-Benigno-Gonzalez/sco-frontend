@@ -5,9 +5,11 @@ import { createOPS } from "./../api/OpsAPI";
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 
 export default function DashboardView() {
 
+  const LOCAL_STORAGE_KEY = "ops-form-data";
 
   const initialValues: OPSRegistrationForm = {
     ID_Usuario: 2,
@@ -41,12 +43,8 @@ export default function DashboardView() {
     Observaciones: ''
   }
 
-  //const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm>({
-  //  defaultValues: initialValues
-  //})
-
-  const {register, handleSubmit, reset, formState: {errors}, setValue} = useForm<OPSRegistrationForm> ({
-    defaultValues: initialValues,
+  const {register, handleSubmit, reset, watch, formState: {errors}, setValue} = useForm<OPSRegistrationForm> ({
+    //defaultValues: initialValues,
     resolver: zodResolver(opsSchema),
     mode: 'onChange',   
     reValidateMode: 'onChange',
@@ -60,6 +58,7 @@ export default function DashboardView() {
     onSuccess: (data) => {
       toast.success(data)
       reset()
+      localStorage.removeItem(LOCAL_STORAGE_KEY)
     }
   })
 
@@ -72,6 +71,23 @@ export default function DashboardView() {
   const calfOptions = Object.entries(mappedCalificador).map(([key, value]) => (
     <option value={key} key={key}>{value}</option>
   ))
+
+  // 🔁 Cargar del localStorage al montar
+  useEffect(() => {
+    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (savedData) {
+      const parsed = JSON.parse(savedData)
+      reset(parsed)  // aquí se actualiza el formulario completo
+    } else {
+      reset(initialValues)  // si no hay datos, usar los valores iniciales
+    }
+  }, [])
+
+  // 💾 Guardar en localStorage en cada cambio
+  const watchAllFields = watch()
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(watchAllFields))
+  }, [watchAllFields])
 
   return (
     

@@ -136,7 +136,12 @@ export const consultarOpsSchema = z.array(
   }).extend({
       ID_Registro: z.string(),
       Hora_Calzos: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
-      Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),  
+      Fin_OPS: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, "Formato de hora inválido"),
+      totalNac: z.number(),
+      totalInt: z.number(),
+      totalPax: z.number(),
+      origen: z.string(),
+      destino: z.string()  
   })
 )
 
@@ -174,6 +179,40 @@ export interface OPSRegistrationFormTransformed extends Omit<OPSRegistrationForm
   Kgs_Carga: number;
 }
 
+export interface OPSConsultationFormTransformed extends Omit<OPSConsultar, 
+  | 'Puerta' 
+  | 'Banda' 
+  | 'Adulto_Nac' 
+  | 'Infante_Nac' 
+  | 'Transito_Nac' 
+  | 'Conexion_Nac' 
+  | 'Excento_Nac' 
+  | 'Adulto_Int' 
+  | 'Infante_Int' 
+  | 'Transito_Int' 
+  | 'Conexion_Int' 
+  | 'Excento_Int' 
+  | 'Pza_Equipaje' 
+  | 'Kgs_Equipaje' 
+  | 'Kgs_Carga'
+> {
+  Puerta: string;
+  Banda: string;
+  Adulto_Nac: string;
+  Infante_Nac: string;
+  Transito_Nac: string;
+  Conexion_Nac: string;
+  Excento_Nac: string;
+  Adulto_Int: string;
+  Infante_Int: string;
+  Transito_Int: string;
+  Conexion_Int: string;
+  Excento_Int: string;
+  Pza_Equipaje: string;
+  Kgs_Equipaje: string;
+  Kgs_Carga: string;
+}
+
 type Auth = z.infer< typeof authSchema >
 export type UserLoginForm = Pick<Auth, 'ID_Usuario' | 'Password'>
 export type UserRegistrationForm = Pick<Auth, 'ID_Usuario' | 'Nombre' | 'ApPaterno' | 'ApMaterno' |'Password' | 'Password_Confirmation' | 'Tipo_Usuario' >
@@ -190,4 +229,20 @@ export type OPSRegistrationForm = Pick<OPS,
         'Transito_Int' | 'Conexion_Int' | 'Excento_Int' |
         'Pza_Equipaje' | 'Kgs_Equipaje' | 'Kgs_Carga' |
         'Correo' | 'Observaciones'
+        >
+
+type OPSConsult = z.infer<typeof consultarOpsSchema>[number];
+export type OPSConsultar = Pick<OPSConsult, 
+        'ID_Usuario' | 'ID_Matricula' | 'TipoMov' | 'Fecha_Ope' | 
+        'ID_IATA_Aeropuerto' |'Hora_ITI' | 'Hora_Real' |
+        //'Hora_Calzos' | 'Fin_OPS' |
+        'ID_Aerolinea' | 'Vuelo' | 'Pista' | 'ID_Calificador' |
+        'Posicion' | 'Puerta' | 'Banda' | 'Adulto_Nac' |
+        'Infante_Nac' | 'Transito_Nac' | 'Conexion_Nac' |
+        'Excento_Nac' | 'Adulto_Int' | 'Infante_Int' |
+        'Transito_Int' | 'Conexion_Int' | 'Excento_Int' |
+        'Pza_Equipaje' | 'Kgs_Equipaje' | 'Kgs_Carga' |
+        'Correo' | 'Observaciones' |
+        'ID_Registro' | 'Hora_Calzos' | 'Fin_OPS' |
+        'totalNac' | 'totalInt' | 'totalPax' | 'origen' | 'destino'
         >

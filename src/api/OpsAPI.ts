@@ -1,7 +1,7 @@
 import api from '../lib/axios'
 import {isAxiosError} from 'axios'
 import { consultarOpsSchema, OPSRegistrationForm } from '../types'
-import { transformOPSFormData } from '../middleware/transformData'
+import { transformOPSFormData, transConsultarOPS } from '../middleware/transformData'
 
 export async function createOPS(formData: OPSRegistrationForm) {
   try {
@@ -15,11 +15,12 @@ export async function createOPS(formData: OPSRegistrationForm) {
   }
 }
 
-/*export async function getOPS(fechaInicio: string, fechaFin: string) {
+export async function getOPS(fechaInicio: string, fechaFin: string) {
   try {
     const { data } = await api(`/ops/findOpsbyDate?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
-    console.log(data)
-    const response = consultarOpsSchema.safeParse(data)
+    const rawArray = Array.isArray(data) ? data : data ? [data] : [];
+    const transformedData = rawArray.map(transConsultarOPS);
+    const response = consultarOpsSchema.safeParse(transformedData)
     if (response.success){
       return response.data
     }
@@ -28,19 +29,20 @@ export async function createOPS(formData: OPSRegistrationForm) {
       throw new Error(error.response.data.message)
     }
   }
-}*/
+}
 
-export async function getOPS(fechaInicio: string, fechaFin: string) {
+/*export async function getOPS(fechaInicio: string, fechaFin: string) {
   try {
     const { data } = await api(`/ops/findOpsbyDate?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
-    /*const payload = data.map((item: any) => ({
-      ...item,
-      Fecha_Ope: new Date(item.Fecha_Ope).toISOString().split("T")[0],
-    }));
 
-    console.log("Payload procesado:", payload);*/
+    const rawArray = Array.isArray(data) ? data : data ? [data] : [];
+    const transformedData = rawArray.map(transConsultarOPS);
 
-    const response = consultarOpsSchema.safeParse(data);
+
+    //console.log({data})
+    //const transformedData = transConsultarOPS(data)
+    //console.log(transformedData)
+    const response = consultarOpsSchema.safeParse(transformedData);
     
     if (response.success) {
       return response.data;
@@ -55,8 +57,7 @@ export async function getOPS(fechaInicio: string, fechaFin: string) {
     }
     console.error("Unhandled error:", error);
     return []; // ⚠️ También manejar errores generales con return []
-  }
-}
+  }*/
 
 
 /*export async function getOPS() {

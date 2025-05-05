@@ -1,5 +1,5 @@
 // utils/transformFormData.ts
-import { OPSRegistrationForm, OPSRegistrationFormTransformed } from '../types/index'
+import { OPSConsultar, OPSConsultationFormTransformed, OPSRegistrationForm, OPSRegistrationFormTransformed } from '../types/index'
 
 
 export function transformOPSFormData(formData: OPSRegistrationForm): OPSRegistrationFormTransformed {
@@ -21,4 +21,25 @@ export function transformOPSFormData(formData: OPSRegistrationForm): OPSRegistra
       Kgs_Equipaje: Number(formData.Kgs_Equipaje),
       Kgs_Carga: Number(formData.Kgs_Carga),
     }
+}
+
+export function transConsultarOPS(resData: OPSConsultar): OPSConsultationFormTransformed {
+  return {
+    ...resData,
+    Puerta: String(resData.Puerta),
+    Banda: String(resData.Banda),
+    Adulto_Nac: String(resData.Adulto_Nac),
+    Infante_Nac: String(resData.Infante_Nac),
+    Transito_Nac: String(resData.Transito_Nac),
+    Conexion_Nac: String(resData.Conexion_Nac),
+    Excento_Nac: String(resData.Excento_Nac),
+    Adulto_Int: String(resData.Adulto_Int),
+    Infante_Int: String(resData.Infante_Int),
+    Transito_Int: String(resData.Transito_Int),
+    Conexion_Int: String(resData.Conexion_Int),
+    Excento_Int: String(resData.Excento_Int),
+    Pza_Equipaje: String(resData.Pza_Equipaje),
+    Kgs_Equipaje: String(resData.Kgs_Equipaje),
+    Kgs_Carga: String(resData.Kgs_Carga),
+  }
 }
