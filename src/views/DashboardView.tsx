@@ -44,7 +44,7 @@ export default function DashboardView() {
   }
 
   const {register, handleSubmit, reset, watch, formState: {errors}, setValue} = useForm<OPSRegistrationForm> ({
-    //defaultValues: initialValues,
+    defaultValues: initialValues,
     resolver: zodResolver(opsSchema),
     mode: 'onChange',   
     reValidateMode: 'onChange',
